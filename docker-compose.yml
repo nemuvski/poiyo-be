@@ -1,0 +1,81 @@
+version: '3.7'
+
+services:
+  # PostgreSQLの実行環境
+  postgresql:
+    container_name: postgresql
+    build:
+      context: ./docker
+      dockerfile: PostgreSQL.Dockerfile
+    image: poiyo/postgresql
+    hostname: postgresql
+    ports:
+      - 5432:5432
+    networks:
+      - container_link
+    volumes:
+      - poiyo_postgresql_data:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --locale=C'
+    logging:
+      driver: json-file
+      options:
+        max-size: '5m'
+        max-file: '1'
+
+  # pgAdminの実行環境
+  pgadmin4:
+    image: dpage/pgadmin4:4.29
+    container_name: pgadmin4
+    depends_on:
+      - postgresql
+    hostname: pgadmin4
+    ports:
+      - 5433:80
+    networks:
+      - container_link
+    volumes:
+      - poiyo_pgadmin_data:/var/lib/pgadmin:rw
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    logging:
+      driver: json-file
+      options:
+        max-size: '5m'
+        max-file: '1'
+
+  # Golangの実行環境
+  app:
+    container_name: app
+    build:
+      context: ./
+      dockerfile: docker/Golang.Dockerfile
+    image: poiyo/golang
+    depends_on:
+      - postgresql
+    networks:
+      - container_link
+    volumes:
+      - ./src:/app:rw
+    logging:
+      driver: json-file
+      options:
+        max-size: '5m'
+        max-file: '1'
+
+networks:
+  default:
+    external:
+      name: bridge
+  container_link:
+    name: poiyo.docker.internal
+
+volumes:
+  poiyo_postgresql_data:
+    driver: local
+  poiyo_pgadmin_data:
+    driver: local
