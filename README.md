@@ -31,13 +31,20 @@ docker-compose up -d
 
 http://localhost:5433
 
-ユーザー名(Eメール)とパスワードは適宜 `.env` に記述した内容を入れる。
-
 接続先のサーバーは、ホスト名 `postgresql` で登録する。
 
 ## 開発
 
-### Go
+### 前準備
+
+開発環境であれば、 `.env` にDBの接続先などの情報を記入する。
+
+```bash
+cp .env.example .env.development
+vi .env.development
+```
+
+### 実行方法
 
 Go言語実行用のコンテナで処理する。
 
@@ -50,4 +57,7 @@ docker exec -it app /bin/sh
 ```bash
 go mod download
 go run src/main.go
+
+# もしくは実行環境を指定して実行する.
+GO_EXEC_ENV=development go run src/main.go
 ```
