@@ -13,6 +13,7 @@ type DotEnv struct {
 	Port string
 	User string
 	Pass string
+	Db   string
 }
 
 func Load() *DotEnv {
@@ -22,12 +23,13 @@ func Load() *DotEnv {
 	envfile := fmt.Sprintf(".env.%s", os.Getenv("GO_EXEC_ENV"))
 	err := godotenv.Load(envfile)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("%s を読み込めませんでした。", envfile))
+		log.Fatalln(fmt.Sprintf("%s を読み込めませんでした。", envfile))
 	}
 	return &DotEnv{
 		Host: os.Getenv("PG_HOST"),
 		Port: os.Getenv("PG_PORT"),
 		User: os.Getenv("PG_USER"),
 		Pass: os.Getenv("PG_PASSWORD"),
+		Db:   os.Getenv("PG_DB"),
 	}
 }
