@@ -55,6 +55,8 @@ services:
     image: poiyo/golang
     depends_on:
       - postgresql
+    ports:
+      - 1323:1323
     networks:
       - container_link
     volumes:
