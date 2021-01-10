@@ -5,11 +5,11 @@ services:
   postgresql:
     container_name: postgresql
     build:
-      context: ./docker
-      dockerfile: PostgreSQL.Dockerfile
+      context: ./docker/postgresql
+      dockerfile: Dockerfile
     image: poiyo/postgresql
     env_file:
-      - docker/postgresql.env
+      - docker/postgresql/.env
     hostname: postgresql
     ports:
       - 5432:5432
@@ -29,7 +29,7 @@ services:
   pgadmin4:
     image: dpage/pgadmin4:4.29
     env_file:
-      - docker/pgadmin.env
+      - docker/pgadmin4/.env
     container_name: pgadmin4
     depends_on:
       - postgresql
@@ -51,7 +51,7 @@ services:
     container_name: app
     build:
       context: ./
-      dockerfile: docker/Golang.Dockerfile
+      dockerfile: docker/app/Dockerfile
     image: poiyo/golang
     depends_on:
       - postgresql
