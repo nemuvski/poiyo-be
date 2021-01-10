@@ -2,16 +2,19 @@ package main
 
 import (
 	"fmt"
+	"poiyo-be/src/database"
 	"poiyo-be/src/environment"
+	"poiyo-be/src/model"
 )
 
 func main() {
 	dotenv := environment.Load()
-	message := fmt.Sprintf("%s:%s User:%s PW:%s",
-		dotenv.Host,
-		dotenv.Port,
-		dotenv.User,
-		dotenv.Pass,
-	)
-	fmt.Println(message)
+	db := database.Connect(dotenv)
+
+	// usersテーブルから値を取得して出力.
+	users := []model.User{}
+	db.Find(&users)
+	for _, user := range users {
+		fmt.Printf("%s %s\n", user.UserId, user.CreatedAt)
+	}
 }
