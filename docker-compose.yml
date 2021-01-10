@@ -8,17 +8,16 @@ services:
       context: ./docker
       dockerfile: PostgreSQL.Dockerfile
     image: poiyo/postgresql
+    env_file:
+      - docker/postgresql.env
     hostname: postgresql
     ports:
       - 5432:5432
     networks:
       - container_link
     volumes:
-      - poiyo_postgresql_data:/var/lib/postgresql/data:rw
+      - postgresql_data:/var/lib/postgresql/data:rw
     environment:
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DB}
       POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --locale=C'
     logging:
       driver: json-file
@@ -29,6 +28,8 @@ services:
   # pgAdminの実行環境
   pgadmin4:
     image: dpage/pgadmin4:4.29
+    env_file:
+      - docker/pgadmin.env
     container_name: pgadmin4
     depends_on:
       - postgresql
@@ -38,10 +39,7 @@ services:
     networks:
       - container_link
     volumes:
-      - poiyo_pgadmin_data:/var/lib/pgadmin:rw
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      - pgadmin_data:/var/lib/pgadmin:rw
     logging:
       driver: json-file
       options:
@@ -60,7 +58,7 @@ services:
     networks:
       - container_link
     volumes:
-      - ./src:/app:rw
+      - ./:/go/src/app:rw
     logging:
       driver: json-file
       options:
@@ -75,7 +73,7 @@ networks:
     name: poiyo.docker.internal
 
 volumes:
-  poiyo_postgresql_data:
+  postgresql_data:
     driver: local
-  poiyo_pgadmin_data:
+  pgadmin_data:
     driver: local

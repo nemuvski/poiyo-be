@@ -9,3 +9,5 @@
 /Godeps/
 
 .env
+/docker/postgresql.env
+/docker/pgadmin.env

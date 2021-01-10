@@ -9,8 +9,11 @@
 PostgreSQLといったサービスの設定情報を記述する。
 
 ```bash
-cp .env.example .env
-vi .env
+cp docker/postgresql.env.example docker/postgresql.env
+vi docker/postgresql.env
+
+cp docker/pgadmin.env.example docker/pgadmin.env
+vi docker/pgadmin.env
 ```
 
 ### イメージのビルドとコンテナ起動
