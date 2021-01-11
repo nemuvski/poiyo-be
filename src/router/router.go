@@ -1,8 +1,9 @@
 package router
 
 import (
-	"net/http"
 	"os"
+	"poiyo-be/src/api"
+	"poiyo-be/src/database"
 	"poiyo-be/src/environment"
 	customMiddleware "poiyo-be/src/middleware"
 
@@ -14,14 +15,12 @@ import (
 func Init() *echo.Echo {
 	e := echo.New()
 
-	// 実行モードによってログの出力レベルを変更.
 	if os.Getenv("GO_EXEC_ENV") == environment.EXEC_ENV_DEVELOPMENT {
 		e.Logger.SetLevel(log.DEBUG)
 	} else {
 		e.Logger.SetLevel(log.INFO)
 	}
 
-	// ミドルウェアの登録.
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.Gzip())
@@ -33,15 +32,20 @@ func Init() *echo.Echo {
 			echo.HeaderContentType,
 			echo.HeaderAcceptEncoding,
 		},
-		AllowMethods: []string{echo.GET},
+		AllowMethods: []string{echo.GET, echo.POST},
 	}))
+
+	// リクエスト中のJWTをチェックするミドルウェアを登録.
 	e.Use(customMiddleware.Auth())
+
+	// DBサーバとの接続.
+	db := database.Connect()
+	// DBのトランザクションを制御するミドルウェアを登録.
+	e.Use(customMiddleware.Transaction(db))
 
 	// ルートを登録.
 	v1 := e.Group("/api/v1")
-	v1.GET("/auth", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+	v1.POST("/auth", api.PostAccount())
 
 	return e
 }
