@@ -3,19 +3,19 @@ package database
 import (
 	"fmt"
 	"log"
-	"poiyo-be/src/environment"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func Connect(dotenv *environment.DotEnv) *gorm.DB {
+func Connect() *gorm.DB {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		dotenv.Host,
-		dotenv.User,
-		dotenv.Pass,
-		dotenv.Db,
-		dotenv.Port,
+		os.Getenv("PG_HOST"),
+		os.Getenv("PG_USER"),
+		os.Getenv("PG_PASSWORD"),
+		os.Getenv("PG_DB"),
+		os.Getenv("PG_PORT"),
 	)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
