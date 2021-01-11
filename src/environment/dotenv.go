@@ -8,28 +8,17 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type DotEnv struct {
-	Host string
-	Port string
-	User string
-	Pass string
-	Db   string
-}
+const (
+	EXEC_ENV_DEVELOPMENT = "development"
+)
 
-func Load() *DotEnv {
+func Load() {
 	if os.Getenv("GO_EXEC_ENV") == "" {
-		os.Setenv("GO_EXEC_ENV", "development")
+		os.Setenv("GO_EXEC_ENV", EXEC_ENV_DEVELOPMENT)
 	}
 	envfile := fmt.Sprintf(".env.%s", os.Getenv("GO_EXEC_ENV"))
 	err := godotenv.Load(envfile)
 	if err != nil {
 		log.Fatalln(fmt.Sprintf("%s を読み込めませんでした。", envfile))
-	}
-	return &DotEnv{
-		Host: os.Getenv("PG_HOST"),
-		Port: os.Getenv("PG_PORT"),
-		User: os.Getenv("PG_USER"),
-		Pass: os.Getenv("PG_PASSWORD"),
-		Db:   os.Getenv("PG_DB"),
 	}
 }

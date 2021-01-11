@@ -16,6 +16,10 @@ cp docker/pgadmin4/.env.example docker/pgadmin4/.env
 vi docker/pgadmin4/.env
 ```
 
+### Firebase Admin SDK
+
+鍵を `docker/app/poiyo-web-app.json` で保存してください。
+
 ### イメージのビルドとコンテナ起動
 
 Goを実行する環境とPostgreSQLを実行する環境を提供する。
