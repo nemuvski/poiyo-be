@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// Account accountsテーブルのデータモデル.
 type Account struct {
 	AccountId   string    `json:"account_id" gorm:"primaryKey;not null;type:uuid;default:gen_random_uuid()"`
 	ServiceType string    `json:"service_type" gorm:"primaryKey;not null"`

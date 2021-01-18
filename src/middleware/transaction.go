@@ -9,6 +9,7 @@ const (
 	TxKey = "Tx"
 )
 
+// Transaction トランザクション処理.
 func Transaction(db *gorm.DB) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {

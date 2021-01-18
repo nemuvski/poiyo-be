@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// Comment commentsテーブルのデータモデル.
 type Comment struct {
 	CommentId      string    `json:"comment_id" gorm:"primaryKey;not null;type:uuid;default:gen_random_uuid()"`
 	BoardId        string    `json:"board_id" gorm:"primaryKey;not null;type:uuid"`

@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+// Connect DBサーバーに接続.
 func Connect() *gorm.DB {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		os.Getenv("PG_HOST"),

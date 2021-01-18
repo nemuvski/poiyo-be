@@ -12,6 +12,7 @@ const (
 	EXEC_ENV_DEVELOPMENT = "development"
 )
 
+// Load dotenvファイルを読み込む.
 func Load() {
 	if os.Getenv("GO_EXEC_ENV") == "" {
 		os.Setenv("GO_EXEC_ENV", EXEC_ENV_DEVELOPMENT)
