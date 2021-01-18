@@ -10,6 +10,7 @@ import (
 	"google.golang.org/api/option"
 )
 
+// Auth リクエストに含まれるJWTを検証.
 func Auth() echo.MiddlewareFunc {
 	return auth
 }

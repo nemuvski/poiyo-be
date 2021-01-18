@@ -9,9 +9,10 @@ import (
 	"gorm.io/gorm"
 )
 
+// PostAccount /authでユーザーを登録、または取得するAPI.
 func PostAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		m := new(model.Account)
+		m := new(model.AuthPostRequest)
 		c.Bind(&m)
 
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)

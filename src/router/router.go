@@ -46,6 +46,7 @@ func Init() *echo.Echo {
 	// ルートを登録.
 	v1 := e.Group("/api/v1")
 	v1.POST("/auth", api.PostAccount())
+	v1.POST("/board", api.PostBoard())
 
 	return e
 }
