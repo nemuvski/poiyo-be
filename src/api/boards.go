@@ -9,8 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// PostBoard /boardでボードを作成するAPI.
-func PostBoard() echo.HandlerFunc {
+// PostBoard /boardsでボードを作成するAPI.
+func PostBoards() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		m := new(model.BoardPostRequest)
 		c.Bind(&m)
