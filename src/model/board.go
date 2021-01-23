@@ -2,6 +2,13 @@ package model
 
 import "time"
 
+// BoardPostRequest /boardsのPOSTのリクエストボディ.
+type BoardPostRequest struct {
+	Title          string `json:"title"`
+	Body           string `json:"body"`
+	OwnerAccountId string `json:"owner_account_id"`
+}
+
 // Board boardsテーブルのデータモデル.
 type Board struct {
 	BoardId        string    `json:"board_id" gorm:"primaryKey;not null;type:uuid;default:gen_random_uuid()"`
