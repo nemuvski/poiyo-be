@@ -43,10 +43,12 @@ func Init() *echo.Echo {
 	// DBのトランザクションを制御するミドルウェアを登録.
 	e.Use(customMiddleware.Transaction(db))
 
-	// ルートを登録.
 	v1 := e.Group("/api/v1")
+	// 認証関連.
 	v1.POST("/auth", api.PostAccount())
+	// ボード関連.
 	v1.POST("/boards", api.PostBoards())
+	v1.GET("/boards/:bid", api.GetBoard())
 
 	return e
 }

@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// PostBoard /boardsでボードを作成するAPI.
+// PostBoards /boardsでボードを作成するAPI.
 func PostBoards() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		m := new(model.BoardPostRequest)
@@ -24,5 +24,26 @@ func PostBoards() echo.HandlerFunc {
 		tx.Create(&board)
 
 		return c.JSON(http.StatusCreated, board)
+	}
+}
+
+// GetBoard /boards/:bidでボードをID指定で取得するAPI.
+func GetBoard() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		boardId := c.Param("bid")
+
+		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
+		board := model.Board{}
+
+		// ボードIDで検索する. (ボードIDは一意なので取得できるのは1件のみ)
+		result := tx.Where("board_id = ?", boardId).First(&board)
+
+		// 取得できたか否かで、ステータスコードを変える.
+		status := http.StatusOK
+		if result.RowsAffected == 0 {
+			status = http.StatusNoContent
+		}
+
+		return c.JSON(status, board)
 	}
 }
