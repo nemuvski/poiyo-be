@@ -9,12 +9,12 @@ type BoardPostRequest struct {
 	OwnerAccountId string `json:"owner_account_id" validate:"required,uuid4"`
 }
 
-// BoardsGetRequest /boardsのGETのリクエストボディ.
-type BoardsGetRequest struct {
-	Page           int    `json:"page" validate:"required,min=1"`
-	NumPerPage     int    `json:"num_per_page" validate:"required,min=1,max=50"`
-	OwnerAccountId string `json:"owner_account_id" validate:"omitempty,uuid4"`
-	Search         string `json:"search" validate:"omitempty"`
+// BoardsQueryParameter /boardsのGETのクエリパラメータ.
+type BoardsQueryParameter struct {
+	Page           int    `validate:"required,min=1"`
+	NumPerPage     int    `validate:"required,min=1,max=50"`
+	OwnerAccountId string `validate:"omitempty,uuid4"`
+	Search         string `validate:"omitempty"`
 }
 
 // Board boardsテーブルのデータモデル.
