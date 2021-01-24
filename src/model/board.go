@@ -4,9 +4,9 @@ import "time"
 
 // BoardPostRequest /boardsのPOSTのリクエストボディ.
 type BoardPostRequest struct {
-	Title          string `json:"title"`
-	Body           string `json:"body"`
-	OwnerAccountId string `json:"owner_account_id"`
+	Title          string `json:"title" validate:"required,max=200"`
+	Body           string `json:"body" validate:"required,max=1000"`
+	OwnerAccountId string `json:"owner_account_id" validate:"required,uuid4"`
 }
 
 // Board boardsテーブルのデータモデル.
