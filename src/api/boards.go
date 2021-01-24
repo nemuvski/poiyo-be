@@ -13,7 +13,10 @@ import (
 func PostBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		m := new(model.BoardPostRequest)
-		c.Bind(&m)
+
+		if err := c.Bind(&m); err != nil {
+			return c.String(http.StatusBadRequest, "パラメータに誤りがあります。")
+		}
 
 		board := new(model.Board)
 		board.Title = m.Title

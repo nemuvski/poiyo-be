@@ -13,7 +13,10 @@ import (
 func PostAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		m := new(model.AuthPostRequest)
-		c.Bind(&m)
+
+		if err := c.Bind(&m); err != nil {
+			return c.String(http.StatusBadRequest, "パラメータに誤りがあります。")
+		}
 
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		account := model.Account{}
