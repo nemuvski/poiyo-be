@@ -47,7 +47,7 @@ func Init() *echo.Echo {
 	// 認証関連.
 	v1.POST("/auth", api.PostAccount())
 	// ボード関連.
-	v1.POST("/boards", api.PostBoards())
+	v1.POST("/boards", api.PostBoard())
 	v1.GET("/boards/:bid", api.GetBoard())
 
 	return e
