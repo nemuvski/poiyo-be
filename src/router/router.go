@@ -6,6 +6,7 @@ import (
 	"poiyo-be/src/database"
 	"poiyo-be/src/environment"
 	customMiddleware "poiyo-be/src/middleware"
+	"poiyo-be/src/validation"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -43,11 +44,14 @@ func Init() *echo.Echo {
 	// DBのトランザクションを制御するミドルウェアを登録.
 	e.Use(customMiddleware.Transaction(db))
 
+	// バリデーションを登録.
+	e.Validator = validation.NewValidator()
+
 	v1 := e.Group("/api/v1")
 	// 認証関連.
 	v1.POST("/auth", api.PostAccount())
 	// ボード関連.
-	v1.POST("/boards", api.PostBoards())
+	v1.POST("/boards", api.PostBoard())
 	v1.GET("/boards/:bid", api.GetBoard())
 
 	return e
