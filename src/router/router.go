@@ -54,6 +54,8 @@ func Init() *echo.Echo {
 	v1.POST("/boards", api.PostBoard())
 	v1.GET("/boards", api.GetBoards())
 	v1.GET("/boards/:bid", api.GetBoard())
+	v1.DELETE("/boards/:bid", api.DeleteBoard())
+	v1.PATCH("/boards/:bid", api.PatchBoard())
 
 	return e
 }

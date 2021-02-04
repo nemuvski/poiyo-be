@@ -111,3 +111,39 @@ func GetBoards() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, response)
 	}
 }
+
+// DeleteBoard /boards/:bidでボードをID指定で削除するAPI.
+func DeleteBoard() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		boardId := c.Param("bid")
+		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
+		board := model.Board{}
+		tx.Where("board_id = ?", boardId).Delete(&board)
+		return c.JSON(http.StatusOK, board)
+	}
+}
+
+// PatchBoard /boards/:bid でボードをID指定で更新するAPI.
+func PatchBoard() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		boardId := c.Param("bid")
+		m := new(model.BoardPatchRequest)
+		c.Bind(m)
+
+		if err := c.Validate(m); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
+		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
+		updateBoard := model.Board{
+			Title: m.Title,
+			Body:  m.Body,
+		}
+		result := tx.Model(&model.Board{}).Where("board_id = ? AND owner_account_id = ?", boardId, m.OwnerAccountId).Updates(updateBoard)
+		if result.RowsAffected == 0 {
+			return c.JSON(http.StatusNoContent, updateBoard)
+		}
+
+		return c.JSON(http.StatusOK, updateBoard)
+	}
+}
