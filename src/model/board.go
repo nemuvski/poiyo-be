@@ -9,6 +9,12 @@ type BoardPostRequest struct {
 	OwnerAccountId string `json:"owner_account_id" validate:"required,uuid4"`
 }
 
+// BoardPatchRequest /boardsのPATCHのリクエストボディ.
+type BoardPatchRequest struct {
+	Title string `json:"title" validate:"required,max=200"`
+	Body  string `json:"body" validate:"required,max=1000"`
+}
+
 // BoardsQueryParameter /boardsのGETのクエリパラメータ.
 type BoardsQueryParameter struct {
 	Page           int    `validate:"required,min=1"`

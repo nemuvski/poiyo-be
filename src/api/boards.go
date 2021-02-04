@@ -111,3 +111,41 @@ func GetBoards() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, response)
 	}
 }
+
+// DeleteBoard /boards/:bidでボードをID指定で削除するAPI.
+func DeleteBoard() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		boardId := c.Param("bid")
+		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
+		board := model.Board{}
+		tx.Where("board_id = ?", boardId).Delete(&board)
+		return c.JSON(http.StatusOK, board)
+	}
+}
+
+// PatchBoard /boards/:bid でボードをID指定で更新するAPI.
+func PatchBoard() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		boardId := c.Param("bid")
+		m := new(model.BoardPatchRequest)
+		c.Bind(m)
+
+		if err := c.Validate(m); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
+		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
+		updateBoard := model.Board{
+			Title: m.Title,
+			Body:  m.Body,
+		}
+		responseBoard := model.Board{}
+		// updateのインスタンスに反映結果後のレコードの内容が全てはいらない（設定したもののみ）なのでFindで反映後のレコードを取得.
+		result := tx.Model(&model.Board{BoardId: boardId}).Updates(&updateBoard).Find(&responseBoard)
+		if result.RowsAffected == 0 {
+			return c.JSON(http.StatusNoContent, responseBoard)
+		}
+
+		return c.JSON(http.StatusOK, responseBoard)
+	}
+}
