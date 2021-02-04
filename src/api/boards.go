@@ -139,11 +139,13 @@ func PatchBoard() echo.HandlerFunc {
 			Title: m.Title,
 			Body:  m.Body,
 		}
-		result := tx.Model(&model.Board{}).Where("board_id = ? AND owner_account_id = ?", boardId, m.OwnerAccountId).Updates(updateBoard)
+		responseBoard := model.Board{}
+		// updateのインスタンスに反映結果後のレコードの内容が全てはいらない（設定したもののみ）なのでFindで反映後のレコードを取得.
+		result := tx.Model(&model.Board{BoardId: boardId}).Updates(&updateBoard).Find(&responseBoard)
 		if result.RowsAffected == 0 {
-			return c.JSON(http.StatusNoContent, updateBoard)
+			return c.JSON(http.StatusNoContent, responseBoard)
 		}
 
-		return c.JSON(http.StatusOK, updateBoard)
+		return c.JSON(http.StatusOK, responseBoard)
 	}
 }
