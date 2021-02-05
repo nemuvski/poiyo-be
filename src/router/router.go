@@ -33,7 +33,7 @@ func Init() *echo.Echo {
 			echo.HeaderContentType,
 			echo.HeaderAcceptEncoding,
 		},
-		AllowMethods: []string{echo.GET, echo.POST},
+		AllowMethods: []string{echo.GET, echo.POST, echo.DELETE, echo.PATCH},
 	}))
 
 	// リクエスト中のJWTをチェックするミドルウェアを登録.
