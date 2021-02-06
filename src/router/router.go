@@ -56,6 +56,11 @@ func Init() *echo.Echo {
 	v1.GET("/boards/:bid", api.GetBoard())
 	v1.DELETE("/boards/:bid", api.DeleteBoard())
 	v1.PATCH("/boards/:bid", api.PatchBoard())
+	// コメント関連.
+	v1.POST("/comments", api.PostComment())
+	v1.GET("/comments", api.GetComments())
+	v1.DELETE("/comments/:cid", api.DeleteComment())
+	v1.PATCH("/comments/:cid", api.PatchComment())
 
 	return e
 }
