@@ -67,7 +67,7 @@ func GetComments() echo.HandlerFunc {
 		// 次のページにもデータがあるか判定するためのクエリを実行.
 		nextComments := []model.Board{}
 		checkedNextPageResult := responseQuery.Offset(queryParam.Page * queryParam.NumPerPage).Limit(1).Find(&nextComments)
-		if checkedNextPageResult > 0 {
+		if checkedNextPageResult.RowsAffected > 0 {
 			response.NextPage = queryParam.Page + 1
 		}
 
