@@ -93,8 +93,8 @@ func GetBoards() echo.HandlerFunc {
 			keyword = strings.TrimSpace(keyword)
 			responseQuery = responseQuery.Where("title LIKE ?", "%"+keyword+"%")
 		}
-		// 取得範囲を設定.
-		responseQuery.Offset((queryParam.Page - 1) * numPerPage).Limit(queryParam.NumPerPage).Find(&boards)
+		// 範囲を設定して取得.
+		responseQuery.Offset((queryParam.Page - 1) * queryParam.NumPerPage).Limit(queryParam.NumPerPage).Find(&boards)
 
 		response := model.Boards{
 			CurrentPage: queryParam.Page,
@@ -105,7 +105,7 @@ func GetBoards() echo.HandlerFunc {
 		nextBoards := []model.Board{}
 		checkedNextPageResult := responseQuery.Offset(queryParam.Page * queryParam.NumPerPage).Limit(1).Find(&nextBoards)
 		if checkedNextPageResult.RowsAffected > 0 {
-			response.NextPage = page + 1
+			response.NextPage = queryParam.Page + 1
 		}
 
 		return c.JSON(http.StatusOK, response)
@@ -117,8 +117,8 @@ func DeleteBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
-		board := model.Board{}
-		tx.Where("board_id = ?", boardId).Delete(&board)
+		board := model.Board{BoardId: boardId}
+		tx.Delete(&board)
 		return c.JSON(http.StatusOK, board)
 	}
 }
