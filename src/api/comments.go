@@ -80,8 +80,8 @@ func DeleteComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		commentId := c.Param("cid")
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
-		comment := model.Comment{CommentId: commentId}
-		tx.Delete(&comment)
+		comment := model.Comment{}
+		tx.Where("comment_id = ?", commentId).Delete(&comment)
 		return c.JSON(http.StatusOK, comment)
 	}
 }

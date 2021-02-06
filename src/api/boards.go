@@ -117,8 +117,8 @@ func DeleteBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
-		board := model.Board{BoardId: boardId}
-		tx.Delete(&board)
+		board := model.Board{}
+		tx.Where("board_id = ?", boardId).Delete(&board)
 		return c.JSON(http.StatusOK, board)
 	}
 }
