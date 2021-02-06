@@ -89,7 +89,7 @@ func DeleteComment() echo.HandlerFunc {
 // PatchComment /comments/:cidでコメントをID指定で更新するAPI.
 func PatchComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		commentId := c.Param("bid")
+		commentId := c.Param("cid")
 		m := new(model.CommentPatchRequest)
 		c.Bind(m)
 
