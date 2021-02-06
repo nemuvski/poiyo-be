@@ -11,7 +11,8 @@ type CommentPostRequest struct {
 
 // CommentPatchRequest /commentsのPATCHのリクエストボディ.
 type CommentPatchRequest struct {
-	Body string `json:"body" validate:"required,max=500"`
+	BoardId string `json:"board_id" validate:"required,uuid4"`
+	Body    string `json:"body" validate:"required,max=500"`
 }
 
 // CommentsQueryParameter /commentsのGETのクエリパラメータ.

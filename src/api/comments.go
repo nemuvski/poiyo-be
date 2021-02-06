@@ -101,7 +101,7 @@ func PatchComment() echo.HandlerFunc {
 		updateComment := model.Comment{Body: m.Body}
 		responseComment := model.Comment{}
 		// updateのインスタンスに反映結果後のレコードの内容が全てはいらない（設定したもののみ）なのでFindで反映後のレコードを取得.
-		result := tx.Model(&model.Comment{CommentId: commentId}).Updates(&updateComment).Find(&responseComment)
+		result := tx.Model(&model.Comment{CommentId: commentId, BoardId: m.BoardId}).Updates(&updateComment).Find(&responseComment)
 		if result.RowsAffected == 0 {
 			return c.JSON(http.StatusNoContent, responseComment)
 		}
