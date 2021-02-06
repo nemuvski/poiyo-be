@@ -75,13 +75,14 @@ func GetComments() echo.HandlerFunc {
 	}
 }
 
-// DeleteComment /comments/:cidでコメントをID指定で削除するAPI.
+// DeleteComment /comments/:bid/:cidでコメントをID指定で削除するAPI.
 func DeleteComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		boardId := c.Param("bid")
 		commentId := c.Param("cid")
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		comment := model.Comment{}
-		tx.Where("comment_id = ?", commentId).Delete(&comment)
+		tx.Where("comment_id = ? AND board_id = ?", commentId, boardId).Delete(&comment)
 		return c.JSON(http.StatusOK, comment)
 	}
 }

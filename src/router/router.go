@@ -59,7 +59,7 @@ func Init() *echo.Echo {
 	// コメント関連.
 	v1.POST("/comments", api.PostComment())
 	v1.GET("/comments", api.GetComments())
-	v1.DELETE("/comments/:cid", api.DeleteComment())
+	v1.DELETE("/comments/:bid/:cid", api.DeleteComment())
 	v1.PATCH("/comments/:cid", api.PatchComment())
 
 	return e
