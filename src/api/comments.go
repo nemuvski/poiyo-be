@@ -55,6 +55,7 @@ func GetComments() echo.HandlerFunc {
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		comments := []model.Comment{}
 		responseQuery := tx.Model(&model.Comment{}).Order("created_at DESC")
+		responseQuery = responseQuery.Where("board_id = ?", queryParam.BoardId)
 
 		// 範囲を設定して取得.
 		responseQuery.Offset((queryParam.Page - 1) * queryParam.NumPerPage).Limit(queryParam.NumPerPage).Find(&comments)
