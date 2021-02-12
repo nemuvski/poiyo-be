@@ -50,6 +50,8 @@ func Init() *echo.Echo {
 	v1 := e.Group("/api/v1")
 	// 認証関連.
 	v1.POST("/auth", api.PostAccount())
+	// アカウント関連.
+	v1.DELETE("/accounts/:aid", api.DeleteAccount())
 	// ボード関連.
 	v1.POST("/boards", api.PostBoard())
 	v1.GET("/boards", api.GetBoards())
