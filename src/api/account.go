@@ -45,6 +45,13 @@ func PostAccount() echo.HandlerFunc {
 func DeleteAccount() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		accountId := c.Param("aid")
+
+		// パスパラメータについてバリデーション.
+		params := model.DeleteAccountPathParameter{Aid: accountId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		account := model.Account{}
 		result := tx.Where("account_id = ?", accountId).Delete(&account)
