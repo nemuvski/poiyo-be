@@ -39,19 +39,21 @@ func GetBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
 
+		// パスパラメータについてバリデーション.
+		params := model.BoardPathParameter{Bid: boardId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		board := model.Board{}
 
 		// ボードIDで検索する. (ボードIDは一意なので取得できるのは1件のみ)
 		result := tx.Where("board_id = ?", boardId).First(&board)
-
-		// 取得できたか否かで、ステータスコードを変える.
-		status := http.StatusOK
 		if result.RowsAffected == 0 {
-			status = http.StatusNoContent
+			return c.NoContent(http.StatusNoContent)
 		}
-
-		return c.JSON(status, board)
+		return c.JSON(http.StatusNoContent, board)
 	}
 }
 
@@ -116,10 +118,20 @@ func GetBoards() echo.HandlerFunc {
 func DeleteBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
+
+		// パスパラメータについてバリデーション.
+		params := model.BoardPathParameter{Bid: boardId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		board := model.Board{}
-		tx.Where("board_id = ?", boardId).Delete(&board)
-		return c.JSON(http.StatusOK, board)
+		result := tx.Where("board_id = ?", boardId).Delete(&board)
+		if result.RowsAffected == 0 {
+			return c.NoContent(http.StatusNoContent)
+		}
+		return c.NoContent(http.StatusOK)
 	}
 }
 
@@ -127,6 +139,13 @@ func DeleteBoard() echo.HandlerFunc {
 func PatchBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
+
+		// パスパラメータについてバリデーション.
+		params := model.BoardPathParameter{Bid: boardId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		m := new(model.BoardPatchRequest)
 		c.Bind(m)
 
@@ -143,9 +162,8 @@ func PatchBoard() echo.HandlerFunc {
 		// updateのインスタンスに反映結果後のレコードの内容が全てはいらない（設定したもののみ）なのでFindで反映後のレコードを取得.
 		result := tx.Model(&model.Board{BoardId: boardId}).Updates(&updateBoard).Find(&responseBoard)
 		if result.RowsAffected == 0 {
-			return c.JSON(http.StatusNoContent, responseBoard)
+			return c.NoContent(http.StatusNoContent)
 		}
-
 		return c.JSON(http.StatusOK, responseBoard)
 	}
 }

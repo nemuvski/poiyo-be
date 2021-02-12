@@ -81,10 +81,20 @@ func DeleteComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
 		commentId := c.Param("cid")
+
+		// パスパラメータについてバリデーション.
+		params := model.DeleteCommentPathParameter{Bid: boardId, Cid: commentId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		comment := model.Comment{}
-		tx.Where("comment_id = ? AND board_id = ?", commentId, boardId).Delete(&comment)
-		return c.JSON(http.StatusOK, comment)
+		result := tx.Where("comment_id = ? AND board_id = ?", commentId, boardId).Delete(&comment)
+		if result.RowsAffected == 0 {
+			return c.NoContent(http.StatusNoContent)
+		}
+		return c.NoContent(http.StatusOK)
 	}
 }
 
@@ -92,6 +102,13 @@ func DeleteComment() echo.HandlerFunc {
 func PatchComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		commentId := c.Param("cid")
+
+		// パスパラメータについてバリデーション.
+		params := model.PatchCommentPathParameter{Cid: commentId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		m := new(model.CommentPatchRequest)
 		c.Bind(m)
 
@@ -105,9 +122,8 @@ func PatchComment() echo.HandlerFunc {
 		// updateのインスタンスに反映結果後のレコードの内容が全てはいらない（設定したもののみ）なのでFindで反映後のレコードを取得.
 		result := tx.Model(&model.Comment{CommentId: commentId, BoardId: m.BoardId}).Updates(&updateComment).Find(&responseComment)
 		if result.RowsAffected == 0 {
-			return c.JSON(http.StatusNoContent, responseComment)
+			return c.NoContent(http.StatusNoContent)
 		}
-
 		return c.JSON(http.StatusOK, responseComment)
 	}
 }
