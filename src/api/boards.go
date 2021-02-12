@@ -38,6 +38,13 @@ func PostBoard() echo.HandlerFunc {
 func GetBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
+
+		// パスパラメータについてバリデーション.
+		params := model.BoardPathParameter{Bid: boardId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		board := model.Board{}
 
@@ -111,6 +118,13 @@ func GetBoards() echo.HandlerFunc {
 func DeleteBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
+
+		// パスパラメータについてバリデーション.
+		params := model.BoardPathParameter{Bid: boardId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		board := model.Board{}
 		result := tx.Where("board_id = ?", boardId).Delete(&board)
@@ -125,6 +139,13 @@ func DeleteBoard() echo.HandlerFunc {
 func PatchBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
+
+		// パスパラメータについてバリデーション.
+		params := model.BoardPathParameter{Bid: boardId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		m := new(model.BoardPatchRequest)
 		c.Bind(m)
 
