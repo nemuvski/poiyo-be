@@ -81,6 +81,13 @@ func DeleteComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
 		commentId := c.Param("cid")
+
+		// パスパラメータについてバリデーション.
+		params := model.DeleteCommentPathParameter{Bid: boardId, Cid: commentId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		comment := model.Comment{}
 		result := tx.Where("comment_id = ? AND board_id = ?", commentId, boardId).Delete(&comment)
@@ -95,6 +102,13 @@ func DeleteComment() echo.HandlerFunc {
 func PatchComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		commentId := c.Param("cid")
+
+		// パスパラメータについてバリデーション.
+		params := model.PatchCommentPathParameter{Cid: commentId}
+		if err := c.Validate(params); err != nil {
+			return c.String(http.StatusBadRequest, err.Error())
+		}
+
 		m := new(model.CommentPatchRequest)
 		c.Bind(m)
 

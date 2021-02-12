@@ -22,6 +22,17 @@ type CommentsQueryParameter struct {
 	BoardId    string `validate:"required,uuid4"`
 }
 
+// DeleteCommentPathParameter /comments/:bid/:cidのパスパラメータ.
+type DeleteCommentPathParameter struct {
+	Bid string `validate:"required,uuid4"`
+	Cid string `validate:"required,uuid4"`
+}
+
+// PatchCommentPathParameter /comments/:cidのパスパラメータ.
+type PatchCommentPathParameter struct {
+	Cid string `validate:"required,uuid4"`
+}
+
 // Comment commentsテーブルのデータモデル.
 type Comment struct {
 	CommentId      string    `json:"comment_id" gorm:"primaryKey;not null;type:uuid;default:gen_random_uuid()"`
