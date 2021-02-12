@@ -83,8 +83,11 @@ func DeleteComment() echo.HandlerFunc {
 		commentId := c.Param("cid")
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		comment := model.Comment{}
-		tx.Where("comment_id = ? AND board_id = ?", commentId, boardId).Delete(&comment)
-		return c.JSON(http.StatusOK, comment)
+		result := tx.Where("comment_id = ? AND board_id = ?", commentId, boardId).Delete(&comment)
+		if result.RowsAffected == 0 {
+			return c.NoContent(http.StatusNoContent)
+		}
+		return c.NoContent(http.StatusOK)
 	}
 }
 
@@ -105,9 +108,8 @@ func PatchComment() echo.HandlerFunc {
 		// updateのインスタンスに反映結果後のレコードの内容が全てはいらない（設定したもののみ）なのでFindで反映後のレコードを取得.
 		result := tx.Model(&model.Comment{CommentId: commentId, BoardId: m.BoardId}).Updates(&updateComment).Find(&responseComment)
 		if result.RowsAffected == 0 {
-			return c.JSON(http.StatusNoContent, responseComment)
+			return c.NoContent(http.StatusNoContent)
 		}
-
 		return c.JSON(http.StatusOK, responseComment)
 	}
 }

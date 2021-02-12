@@ -38,20 +38,15 @@ func PostBoard() echo.HandlerFunc {
 func GetBoard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		boardId := c.Param("bid")
-
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		board := model.Board{}
 
 		// ボードIDで検索する. (ボードIDは一意なので取得できるのは1件のみ)
 		result := tx.Where("board_id = ?", boardId).First(&board)
-
-		// 取得できたか否かで、ステータスコードを変える.
-		status := http.StatusOK
 		if result.RowsAffected == 0 {
-			status = http.StatusNoContent
+			return c.NoContent(http.StatusNoContent)
 		}
-
-		return c.JSON(status, board)
+		return c.JSON(http.StatusNoContent, board)
 	}
 }
 
@@ -118,8 +113,11 @@ func DeleteBoard() echo.HandlerFunc {
 		boardId := c.Param("bid")
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		board := model.Board{}
-		tx.Where("board_id = ?", boardId).Delete(&board)
-		return c.JSON(http.StatusOK, board)
+		result := tx.Where("board_id = ?", boardId).Delete(&board)
+		if result.RowsAffected == 0 {
+			return c.NoContent(http.StatusNoContent)
+		}
+		return c.NoContent(http.StatusOK)
 	}
 }
 
@@ -143,9 +141,8 @@ func PatchBoard() echo.HandlerFunc {
 		// updateのインスタンスに反映結果後のレコードの内容が全てはいらない（設定したもののみ）なのでFindで反映後のレコードを取得.
 		result := tx.Model(&model.Board{BoardId: boardId}).Updates(&updateBoard).Find(&responseBoard)
 		if result.RowsAffected == 0 {
-			return c.JSON(http.StatusNoContent, responseBoard)
+			return c.NoContent(http.StatusNoContent)
 		}
-
 		return c.JSON(http.StatusOK, responseBoard)
 	}
 }
