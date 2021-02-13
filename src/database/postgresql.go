@@ -13,13 +13,18 @@ import (
 
 // Connect DBサーバーに接続.
 func Connect() *gorm.DB {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s",
 		os.Getenv("PG_HOST"),
 		os.Getenv("PG_USER"),
 		os.Getenv("PG_PASSWORD"),
 		os.Getenv("PG_DB"),
 		os.Getenv("PG_PORT"),
 	)
+
+	if os.Getenv("GO_EXEC_ENV") == environment.EXEC_ENV_DEVELOPMENT {
+		dsn = dsn + " sslmode=disable"
+	}
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if os.Getenv("GO_EXEC_ENV") == environment.EXEC_ENV_DEVELOPMENT {
