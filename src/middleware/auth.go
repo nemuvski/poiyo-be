@@ -17,7 +17,13 @@ func Auth() echo.MiddlewareFunc {
 
 func auth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		opt := option.WithCredentialsFile(os.Getenv("FB_ADMIM_SDK_KEY_PATH"))
+		var opt option.ClientOption
+		if os.Getenv("FB_KEYFILE_JSON") != "" {
+			// (本番環境向け) 環境変数にキーファイルの内容が設定されている場合はその内容を用いる.
+			opt = option.WithCredentialsJSON([]byte(os.Getenv("FB_KEYFILE_JSON")))
+		} else {
+			opt = option.WithCredentialsFile(os.Getenv("FB_ADMIM_SDK_KEY_PATH"))
+		}
 		app, err := firebase.NewApp(context.Background(), nil, opt)
 		if err != nil {
 			return err
