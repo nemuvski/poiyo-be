@@ -11,4 +11,5 @@
 /docker/app/poiyo-web-app.json
 
 .env.development
+.env.production
 /docker/**/.env
