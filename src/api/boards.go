@@ -80,7 +80,7 @@ func GetBoards() echo.HandlerFunc {
 
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		boards := []model.Board{}
-		responseQuery := tx.Model(&model.Board{}).Order("created_at DESC")
+		responseQuery := tx.Model(&model.Board{}).Order("created_timestamp DESC")
 		// アカウントIDの条件を設定.
 		if queryParam.OwnerAccountId != "" {
 			responseQuery = responseQuery.Where("owner_account_id = ?", queryParam.OwnerAccountId)

@@ -54,7 +54,7 @@ func GetComments() echo.HandlerFunc {
 
 		tx := c.Get(customMiddleware.TxKey).(*gorm.DB)
 		comments := []model.Comment{}
-		responseQuery := tx.Model(&model.Comment{}).Order("created_at DESC")
+		responseQuery := tx.Model(&model.Comment{}).Order("created_timestamp DESC")
 		responseQuery = responseQuery.Where("board_id = ?", queryParam.BoardId)
 
 		// 範囲を設定して取得.
