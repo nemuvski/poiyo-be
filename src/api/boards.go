@@ -51,9 +51,9 @@ func GetBoard() echo.HandlerFunc {
 		// ボードIDで検索する. (ボードIDは一意なので取得できるのは1件のみ)
 		result := tx.Where("board_id = ?", boardId).First(&board)
 		if result.RowsAffected == 0 {
-			return c.NoContent(http.StatusNoContent)
+			return c.NoContent(http.StatusNotFound)
 		}
-		return c.JSON(http.StatusNoContent, board)
+		return c.JSON(http.StatusOK, board)
 	}
 }
 
