@@ -13,3 +13,6 @@
 .env.development
 .env.production
 /docker/**/.env
+
+# mounted dir
+/postgresql

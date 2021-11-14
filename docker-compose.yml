@@ -17,6 +17,8 @@ services:
       - container_link
     volumes:
       - postgresql_data:/var/lib/postgresql/data:rw
+      # ダンプファイルの取り出し等に利用する
+      - ./postgresql/:/root:rw
     environment:
       POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --locale=C'
     logging:
