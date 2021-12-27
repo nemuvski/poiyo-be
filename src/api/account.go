@@ -5,7 +5,7 @@ import (
 	customMiddleware "poiyo-be/src/middleware"
 	"poiyo-be/src/model"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 

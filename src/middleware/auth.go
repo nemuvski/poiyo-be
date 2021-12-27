@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	firebase "firebase.google.com/go"
-	"github.com/labstack/echo"
+	firebase "firebase.google.com/go/v4"
+	"github.com/labstack/echo/v4"
 	"google.golang.org/api/option"
 )
 
