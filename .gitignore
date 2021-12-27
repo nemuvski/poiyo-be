@@ -8,6 +8,8 @@
 /vendor/
 /Godeps/
 
+.DS_Store
+
 /docker/app/poiyo-web-app.json
 
 .env.development
