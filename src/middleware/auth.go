@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	firebase "firebase.google.com/go"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"google.golang.org/api/option"
 )
 

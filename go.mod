@@ -10,7 +10,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/joho/godotenv v1.4.0
-	github.com/labstack/echo v3.3.10+incompatible
+	github.com/labstack/echo/v4 v4.6.1
 	github.com/labstack/gommon v0.3.1
 	google.golang.org/api v0.59.0
 	gorm.io/driver/postgres v1.2.3
