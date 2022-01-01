@@ -63,6 +63,9 @@ services:
       - container_link
     volumes:
       - ./:/go/src/app:rw
+      - go_bin:/go/bin
+      - go_pkg:/go/pkg
+      - vscode_server:/root/.vscode-server
     tty: true
     logging:
       driver: json-file
@@ -81,4 +84,10 @@ volumes:
   postgresql_data:
     driver: local
   pgadmin_data:
+    driver: local
+  go_pkg:
+    driver: local
+  go_bin:
+    driver: local
+  vscode_server:
     driver: local
